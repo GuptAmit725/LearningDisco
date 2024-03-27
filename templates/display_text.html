@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Text</title>
+    <style>
+        /* CSS for centering and adding scrollbar */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .text-container {
+            width: 40%; /* Adjust as needed */
+            max-width: 600px; /* Maximum width */
+            height: 80%; /* Adjust as needed */
+            max-height: 600px; /* Maximum height */
+            overflow: auto; /* Add scrollbar if content overflows */
+            border: 10px solid #ccc; /* Optional: Add border for clarity */
+            border-radius: 10px; /* Optional: Add rounded corners */
+            padding: 20px; /* Optional: Add padding */
+            position: relative; /* Position relative for absolute positioning */
+        }
+        pre {
+            margin: 0; /* Remove default margin */
+            white-space: pre-wrap; /* Preserve formatting */
+        }
+        .doubt-box {
+            text-align: center; /* Center align text box and button */
+            height: 300px;
+            margin-top: 20px; /* Add top margin to separate from text */
+        }
+        .doubt-input {
+            width: calc(100% - 20px); /* Adjust width */
+            height: 300px;
+            padding: 10px; /* Adjust padding */
+            border: 1px solid #ccc; /* Optional: Add border */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            box-sizing: border-box; /* Ensure padding and border are included in width */
+            margin-bottom: 10px; /* Add bottom margin to separate from button */
+        }
+        .submit-btn {
+            width: calc(100% - 20px); /* Adjust width */
+            padding: 10px; /* Adjust padding */
+            font-size: 16px; /* Adjust font size */
+            background-color: black; /* Background color */
+            color: white; /* Text color */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            cursor: pointer; /* Add cursor pointer */
+        }
+        .submit-btn:hover {
+            opacity: 0.8; /* Hover opacity */
+        }
+        .next-btn {
+            width: 150px; /* Adjust width */
+            padding: 10px; /* Adjust padding */
+            background-color: black; /* Button background color */
+            color: white; /* Button text color */
+            border: none; /* Remove button border */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            text-align: center;
+            margin-left: 150px;
+        }
+        .next-btn:hover {
+            opacity: 0.8; /* Reduce opacity on hover */
+        }
+        .nav-btn {
+            right: 600px;
+            width: 150px; /* Adjust width */
+            padding: 10px; /* Adjust padding */
+            background-color: black; /* Button background color */
+            color: white; /* Button text color */
+            border: none; /* Remove button border */
+            border-radius: 5px; /* Optional: Add rounded corners */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            text-align: center;
+        }
+        .nav-btn:hover {
+            opacity: 0.8; /* Reduce opacity on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="text-container">
+        <!-- Main text content -->
+        <pre>{{ textContentDict[0] }}</pre>
+        <!-- Next button -->
+        <button class="next-btn" onclick="nextPage()">></button>
+        <button class="nav-btn" onclick="prevPage()"><</button>
+    </div>
+    <!-- Doubt text box and submit button -->
+    <div class="doubt-box">
+        <input type="text" id="doubt-input" class="doubt-input" placeholder="Enter your doubt here...">
+        <br> <!-- Add line break to separate inputs -->
+        <button class="submit-btn" onclick="sendDoubt()">Submit</button> <!-- Add a submit button -->
+    </div>
+    <script>
+        // Load the text content dictionary from the JSON string
+        let currentPage = 0; // Initialize page counter
+        const textContentDict = {{ textContentDict | safe}};
+        // console.log(textContentDict)
+        function prevPage() {
+            currentPage--; // Decrement page counter
+            const prevPageContent = getPageContent(currentPage); // Retrieve text content of previous page
+            updateTextContent(prevPageContent); // Update text box content with previous page content
+        }
+
+        function nextPage() {
+            console.log(currentPage)
+            currentPage++; // Increment page counter
+            console.log(currentPage)
+            const nextPageContent = getPageContent(currentPage); // Retrieve text content of next page
+            console.log(nextPageContent)
+            updateTextContent(nextPageContent); // Update text box content with next page content
+        }
+
+        function getPageContent(pageNumber) {
+            console.log(pageNumber)
+            console.log(textContentDict)
+            return textContentDict[pageNumber] || ''; // Retrieve text content from dictionary
+        }
+
+        function updateTextContent(content) {
+            console.log('Updating text content:', content); // Log the content being updated
+            const textContainer = document.querySelector('.text-container pre');
+            console.log('Text container element:', textContainer); // Log the selected element
+            if (textContainer) {
+                textContainer.textContent = content; // Update text content in text container
+                console.log('Text content updated successfully.');
+            } else {
+                console.error('Text container element not found.');
+            }
+        }
+        function sendDoubt() {
+            var doubtText = document.getElementById("doubt-input").value; // Get the input value
+            // Send the doubt text to the server using AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/submit_doubt", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log("Doubt submitted successfully.");
+                }
+            };
+            xhr.send(JSON.stringify({doubt: doubtText}));
+        }
+    </script>
+</body>
+</html>

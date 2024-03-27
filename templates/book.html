@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+        #book-content {
+            width: 80%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: auto; /* Add overflow property to handle long text content */
+            max-height: 80vh; /* Set maximum height to prevent overflowing */
+        }
+    </style>
+</head>
+<body>
+    <div id="book-content">
+        <h1>Book Content</h1>
+        <p>{{ text }}</p>
+    </div>
+</body>
+</html>

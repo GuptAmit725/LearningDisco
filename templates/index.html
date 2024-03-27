@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKR</title>
+    <style>
+        /* CSS for styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90vw; /* 90% of viewport width */
+            height: 90vh; /* 90% of viewport height */
+            max-width: 1200px; /* Set a maximum width */
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid black; /* Thin black border */
+            border-radius: 10px; /* Rounded corners */
+            overflow: auto; /* Add scrollbar if content overflows */
+        }
+        .logo {
+            float: left;
+            margin-right: 20px;
+        }
+        .nav-buttons {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .nav-buttons a {
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+        /* Highlighting top navigation links */
+        .nav-buttons a.highlight {
+            color: black;
+        }
+        .center-content {
+            margin-top: 100px; /* Adjusted margin */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .center-content button {
+            padding: 40px 120px; /* Increased button depth */
+            font-size: 20px;
+            margin: 10px auto; /* Centering buttons horizontally */
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            border-radius: 20px; /* Rounded corners */
+            width: 400px; /* Doubled button width */
+        }
+        .read-book, .pro-read-book {
+            background-color: #f2f2f2;
+            color: black;
+        }
+        .pro-read-book {
+            background-color: black;
+            color: white;
+        }
+        .yellow-button {
+            background-color: yellow;
+            color: black;
+        }
+
+        .center-content button:hover {
+            opacity: 0.8;
+        }
+        /* Styling for the faded text */
+        .faded-text {
+            margin-top: 30px; /* Add some space from the buttons */
+            color: rgba(0, 0, 0, 0.5); /* Faded color */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo section -->
+        <div class="logo">
+            <!-- Replace this with the actual path to your logo image -->
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="100">
+        </div>
+        <!-- Navigation buttons -->
+        <div class="nav-buttons">
+            <a href="#" class="highlight">Home</a>
+            <a href="#" class="highlight">About Us</a>
+            <a href="#" class="highlight">Contact Us</a>
+            <a href="#" class="highlight">Products</a>
+            <a href="#" class="highlight">Careers</a>
+        </div>
+        <!-- Center content section -->
+        <div class="center-content">
+            <!-- Button for reading book -->
+            <button class="read-book" onclick="redirectToReadPage()">Read Book</button>
+            <!-- Button for pro reading book -->
+            <button class="pro-read-book" onclick="redirectToProReadPage()">Pro-Read Book</button>
+            <!-- Third button -->
+            <a href="https://www.gutenberg.org/" target="_blank">
+                <button class="yellow-button">Don't know where to start? Click me.</button>
+            </a>
+        </div>
+        <!-- Faded text section -->
+        <div class="faded-text">
+            <!-- Faded text content -->
+            <p>This is a demo version, actual services will be starting soon. Stay tuned!</p>
+        </div>
+    </div>
+
+    <script>
+        function redirectToReadPage() {
+            window.location.href = "/read";
+        }
+        function redirectToProReadPage() {
+            window.location.href = "/proread";
+        }
+    </script>
+</body>
+</html>

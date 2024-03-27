@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+        #file-input {
+            display: none;
+        }
+        #upload-button {
+            padding: 20px 40px;
+            font-size: 18px;
+            background-color: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" id="file-input" accept=".pdf" onchange="handleFileSelect(event)">
+        <label for="file-input" id="upload-button">Select a PDF File</label>
+    </form>
+
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // You can handle the file upload process here
+                // For demonstration, let's assume the file is uploaded successfully
+                alert("File uploaded successfully!");
+                // Redirect to book.html
+                window.location.href = "book.html";
+            }
+        }
+    </script>
+</body>
+</html>
