@@ -16,7 +16,7 @@ def extract_text_from_pdf(pdf_path):
             text = ""
             textContentDict = extract_pdf.main(pdf_path)
             print(textContentDict.keys())
-            with open("outputs\out_text.txt", 'r') as f:
+            with open("outputs\out_text.txt", 'w') as f:
                 text = f.read()
             # for page in reader.pages:
             #     text += page.extract_text().replace('\n',' ')  # Add a line break after each page's text
