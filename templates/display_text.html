@@ -25,12 +25,34 @@
             padding: 20px; /* Optional: Add padding */
             position: relative; /* Position relative for absolute positioning */
         }
+        .video-container {
+            width: 90%; /* Adjust as needed */
+            max-width: 430px; /* Maximum width */
+            height: 71%; /* Adjust as needed */
+            max-height: 600px; /* Maximum height */
+            overflow: hidden; /* Hide overflow content */
+            position: relative; /* Position relative for absolute positioning */
+            border-radius: 10px; /* Add rounded corners */
+            border: 2px solid #ccc; /* Border style */
+            padding: 60px; /* Padding inside the container */
+        }
+        video {
+            width: 100%; /* Make video fill container width */
+            height: 100%; /* Make video fill container height */
+            object-fit: cover; /* Maintain aspect ratio and cover container */
+        }
         pre {
             margin: 0; /* Remove default margin */
             white-space: pre-wrap; /* Preserve formatting */
         }
+        .button-container {
+            position: relative;
+            left: 32%;
+            height: 100%
+            
+        }
         .doubt-box {
-            text-align: center; /* Center align text box and button */
+            text-align: center;
             height: 300px;
             margin-top: 20px; /* Add top margin to separate from text */
         }
@@ -42,9 +64,10 @@
             border-radius: 5px; /* Optional: Add rounded corners */
             box-sizing: border-box; /* Ensure padding and border are included in width */
             margin-bottom: 10px; /* Add bottom margin to separate from button */
+            word-wrap: break-word;
         }
         .submit-btn {
-            width: calc(100% - 20px); /* Adjust width */
+            width: 437px; /* Adjust width */
             padding: 10px; /* Adjust padding */
             font-size: 16px; /* Adjust font size */
             background-color: black; /* Background color */
@@ -59,13 +82,12 @@
         .next-btn {
             width: 150px; /* Adjust width */
             padding: 10px; /* Adjust padding */
-            background-color: black; /* Button background color */
-            color: white; /* Button text color */
-            border: none; /* Remove button border */
+            font-size: 16px; /* Adjust font size */
+            background-color: black; /* Background color */
+            color: white; /* Text color */
+            border: none; /* Remove border */
             border-radius: 5px; /* Optional: Add rounded corners */
-            cursor: pointer; /* Change cursor to pointer on hover */
-            text-align: center;
-            margin-left: 150px;
+            cursor: pointer; /* Add cursor pointer */
         }
         .next-btn:hover {
             opacity: 0.8; /* Reduce opacity on hover */
@@ -94,16 +116,28 @@
         <button class="next-btn" onclick="nextPage()">></button>
         <button class="nav-btn" onclick="prevPage()"><</button>
     </div>
-    <!-- Doubt text box and submit button -->
-    <div class="doubt-box">
-        <input type="text" id="doubt-input" class="doubt-input" placeholder="Enter your doubt here...">
-        <br> <!-- Add line break to separate inputs -->
-        <button class="submit-btn" onclick="sendDoubt()">Submit</button> <!-- Add a submit button -->
+    <div class="video-container">
+        <!-- Doubt text box and submit button -->
+        <div class="doubt-box">
+            <textarea id="text-input" class="text-input" placeholder="Doubt"></textarea>
+            <br> <!-- Add line break to separate inputs -->
+            <button class="submit-btn" onclick="sendDoubt()">Submit</button> <!-- Add a submit button -->
+        </div>
+        <iframe id="video-player" width="435px" height="348px" src="{{ initial_video }}" frameborder="0" allowfullscreen></iframe>
+        <div class="button-container">
+            <button class="next-btn" onclick="nextVideo()">></button>
+        </div>
     </div>
+    
     <script>
         // Load the text content dictionary from the JSON string
         let currentPage = 0; // Initialize page counter
         const textContentDict = {{ textContentDict | safe}};
+        // JavaScript code to load the next video
+        var videoUrls = {{ video_links | tojson }};
+        var currentVideoIndex = 0;
+        var videoPlayer = document.getElementById('video-player');
+        var nextVideoBtn = document.getElementById('next-btn');
         // console.log(textContentDict)
         function prevPage() {
             currentPage--; // Decrement page counter
@@ -112,17 +146,12 @@
         }
 
         function nextPage() {
-            console.log(currentPage)
             currentPage++; // Increment page counter
-            console.log(currentPage)
             const nextPageContent = getPageContent(currentPage); // Retrieve text content of next page
-            console.log(nextPageContent)
             updateTextContent(nextPageContent); // Update text box content with next page content
         }
 
         function getPageContent(pageNumber) {
-            console.log(pageNumber)
-            console.log(textContentDict)
             return textContentDict[pageNumber] || ''; // Retrieve text content from dictionary
         }
 
@@ -137,6 +166,12 @@
                 console.error('Text container element not found.');
             }
         }
+        function nextVideo() {
+            // Increment the index circularly
+            // Change the src attribute of the iframe to load the next video
+            currentVideoIndex = (currentVideoIndex + 1) % videoUrls.length;
+            videoPlayer.src = videoUrls[currentVideoIndex];
+        };
         function sendDoubt() {
             var doubtText = document.getElementById("doubt-input").value; // Get the input value
             // Send the doubt text to the server using AJAX

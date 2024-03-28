@@ -30,7 +30,7 @@ class ai_in_video:
         video_ids = [unq_list.append(id_) for id_ in re.findall(r"watch\?v=(\S{11})", html.read().decode()) if id_ not in unq_list]
         video_links = []
         for id_ in unq_list:
-            video_links.append("https://www.youtube.com/watch?v="+id_)
+            video_links.append("https://www.youtube.com/embed/"+id_)
 
         return video_links
 

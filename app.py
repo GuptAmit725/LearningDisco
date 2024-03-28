@@ -4,9 +4,17 @@ import os
 import json
 from PyPDF2 import PdfReader
 from scripts import extract_pdf
+from AI_module.video_urls import ai_in_video
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
+
+text = """
+The behavior of all objects can be described by saying that objects tend to "keep on doing what they're doing" (unless acted upon by an unbalanced force). If at rest, they will continue in this same state of rest. If in motion with an eastward velocity of 5 m/s, they will continue in this same state of motion (5 m/s, East). If in motion with a leftward velocity of 2 m/s, they will continue in this same state of motion (2 m/s, left). The state of motion of an object is maintained as long as the object is not acted upon by an unbalanced force. All objects resist changes in their state of motion - they tend to "keep on doing what they're doing."
+"""
+video_urls = ai_in_video()
+video_links = video_urls.fetch_urls(text)
+#print(video_links)
 
 def extract_text_from_pdf(pdf_path):
     textContentDict = {}
@@ -16,8 +24,9 @@ def extract_text_from_pdf(pdf_path):
             text = ""
             textContentDict = extract_pdf.main(pdf_path)
             print(textContentDict.keys())
-            with open("outputs\out_text.txt", 'w') as f:
+            with open("outputs\out_text.txt", 'r') as f:
                 text = f.read()
+            os.remove("outputs\out_text.txt")
             # for page in reader.pages:
             #     text += page.extract_text().replace('\n',' ')  # Add a line break after each page's text
             return text, textContentDict
@@ -44,7 +53,7 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
         extracted_text, textContentDict = extract_text_from_pdf(file_path)
-        return render_template('display_text.html', textContentDict =  textContentDict)# render_template('book.html', text=extracted_text)
+        return render_template('display_text.html', textContentDict =  textContentDict, initial_video = video_links[0], video_links = video_links)# render_template('book.html', text=extracted_text)
 
 @app.route('/proread')
 def proread():
