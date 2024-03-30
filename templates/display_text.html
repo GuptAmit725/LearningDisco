@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +16,7 @@
             padding: 0;
         }
         .text-container {
-            width: 40%; /* Adjust as needed */
+            width: 32%; /* Adjust as needed */
             max-width: 600px; /* Maximum width */
             height: 80%; /* Adjust as needed */
             max-height: 600px; /* Maximum height */
@@ -47,13 +48,12 @@
         }
         .button-container {
             position: relative;
-            left: 32%;
+            left: 15%;
             height: 100%
             
         }
         .doubt-box {
-            text-align: center;
-            height: 300px;
+            height: 92px;
             margin-top: 20px; /* Add top margin to separate from text */
         }
         .doubt-input {
@@ -82,18 +82,17 @@
         .next-btn {
             width: 150px; /* Adjust width */
             padding: 10px; /* Adjust padding */
-            font-size: 16px; /* Adjust font size */
-            background-color: black; /* Background color */
-            color: white; /* Text color */
-            border: none; /* Remove border */
+            background-color: black; /* Button background color */
+            color: white; /* Button text color */
+            border: none; /* Remove button border */
             border-radius: 5px; /* Optional: Add rounded corners */
-            cursor: pointer; /* Add cursor pointer */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            text-align: center;
         }
         .next-btn:hover {
             opacity: 0.8; /* Reduce opacity on hover */
         }
         .nav-btn {
-            right: 600px;
             width: 150px; /* Adjust width */
             padding: 10px; /* Adjust padding */
             background-color: black; /* Button background color */
@@ -112,19 +111,22 @@
     <div class="text-container">
         <!-- Main text content -->
         <pre>{{ textContentDict[0] }}</pre>
-        <!-- Next button -->
-        <button class="next-btn" onclick="nextPage()">></button>
-        <button class="nav-btn" onclick="prevPage()"><</button>
+        <div class="button-container">
+            <button class="nav-btn" onclick="prevPage()"><</button>
+            <!-- Next button -->
+            <button class="next-btn" onclick="nextPage()">></button>
+        </div>
     </div>
     <div class="video-container">
         <!-- Doubt text box and submit button -->
         <div class="doubt-box">
-            <textarea id="text-input" class="text-input" placeholder="Doubt"></textarea>
+            <textarea id="text-input" class="text-input" placeholder="Doubt" style="width: 431px;"></textarea>
             <br> <!-- Add line break to separate inputs -->
-            <button class="submit-btn" onclick="sendDoubt()">Submit</button> <!-- Add a submit button -->
+            <button class="submit-btn" onclick="processDoubt()">Submit</button> <!-- Add a submit button -->
         </div>
         <iframe id="video-player" width="435px" height="348px" src="{{ initial_video }}" frameborder="0" allowfullscreen></iframe>
         <div class="button-container">
+            <button class="nav-btn" onclick="prevVideo()"><</button>
             <button class="next-btn" onclick="nextVideo()">></button>
         </div>
     </div>
@@ -172,19 +174,29 @@
             currentVideoIndex = (currentVideoIndex + 1) % videoUrls.length;
             videoPlayer.src = videoUrls[currentVideoIndex];
         };
-        function sendDoubt() {
-            var doubtText = document.getElementById("doubt-input").value; // Get the input value
-            // Send the doubt text to the server using AJAX
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/submit_doubt", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
+        function prevVideo() {
+            currentVideoIndex--;
+            // Increment the index circularly
+            // Change the src attribute of the iframe to load the next video
+            videoPlayer.src = videoUrls[currentVideoIndex];
+        };
+        function processDoubt() {
+            var doubtText = document.getElementById("text-input").value; // Get the text from the textarea
+            var xhr = new XMLHttpRequest(); // Create a new XMLHttpRequest object
+            xhr.open("POST", "/process_doubt", true); // Initialize a POST request to the server
+            xhr.setRequestHeader("Content-Type", "application/json"); // Set the request header
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    console.log("Doubt submitted successfully.");
+                if (xhr.readyState === 4 && xhr.status === 200) { // Check if request is complete and successful
+                    var response = JSON.parse(xhr.responseText); // Parse the JSON response
+                    videoUrls = response.video_urls; // Update videoUrls with the new video URLs
+                    currentVideoIndex = 0; // Reset currentVideoIndex to 0
+                    videoPlayer.src = videoUrls[currentVideoIndex]; // Load the first video in the updated list
+                    console.log("Video URLs updated successfully.");
                 }
             };
-            xhr.send(JSON.stringify({doubt: doubtText}));
+            xhr.send(JSON.stringify({ doubt: doubtText })); // Send the doubt text to the server
         }
+
     </script>
 </body>
 </html>

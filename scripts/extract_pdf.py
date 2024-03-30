@@ -30,7 +30,7 @@ else:
 image_file_list = []
 
 text_file = out_directory / Path("out_text.txt")
-print(out_directory,' : ', text_file)
+
 def main(pdf_path:str):
     ''' 
     Main execution point of the program
